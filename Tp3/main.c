@@ -44,6 +44,12 @@ void freeWinners(TuringWinner *winners, int count) {
         free(winners[i].work);
     }
 }
+void printWinners(FILE *outputFile, TuringWinner *winners, int count) {
+    for (int i = 0; i < count; i++) {
+        fprintf(outputFile, "%d;%s;%s\n", winners[i].year, winners[i].winners, winners[i].work);
+    }
+}
+
 
 int main() {
     FILE *file = fopen("turingWinners.csv", "r");
@@ -58,9 +64,20 @@ int main() {
     for (int i = 0; i < count; i++) {
         printf("Year: %d, Winners: %s, Work: %s\n", winners[i].year, winners[i].winners, winners[i].work);
     }
+    FILE *outputFile = fopen("out.csv", "w");
+    if (outputFile == NULL) {
+        printf("Error: Could not open output file.\n");
+        free(winners);
+        return 1;
+    }
+
+    printWinners(outputFile, winners, count);
+
+    printf("Done.\n");
     freeWinners(winners, count);
     free(winners);
     fclose(file);
+    fclose(outputFile);
 
     return 0;
 }
